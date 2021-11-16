@@ -1,0 +1,38 @@
+version: '3'
+services:
+  web-api:
+    build: web-api
+    ports: 8080:8080
+    container_name: 'regis-web'
+  judge-api:
+    build: judge-api
+    ports: 8081:8081
+    container_name: 'regis-judge'
+  scoreboard-api:
+    build: scoreboard-api
+    ports: 8082:8082
+    container_name: 'regis-scoreboard'
+  data-api:
+    build: data-api
+    ports: 8083:8083
+    container_name: 'regis-data'
+  rabbitmq:
+    image: rabbitmq
+    container_name: 'regis-queue'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbitmq_regis_net
+  postgres:
+    image: postgres
+    volumes:
+      - ~/.docker-conf/postgresql/data/:/var/lib/postgresql/data
+      - ~/.docker-conf/postgresql/log/:/var/log/postgresql
+
+networks:
+  rabbitmq_regis_net:
+    driver: bridge
